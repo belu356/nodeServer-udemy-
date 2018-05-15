@@ -1,6 +1,8 @@
 var express = require('express');
 var app = express();
 var bcrypt = require('bcrypt');
+var jwt = require ('jsonwebtoken');
+var SEED = require('../config/config');
 
 var Usuario = require('../models/usuario');
 
@@ -22,6 +24,25 @@ app.get('/', (req, res, next) => { //next: cuando se ejecute, continue a la prox
                     usuarios: usuarios
                 });
             });
+
+    //middelware //verifica si el token es valido. Despues de esto (get) todo necesita autenticacion
+
+    app.use('/', (req, res, next) => {  //cualquier ruta que este debajo de esto, pasa por aca
+        var token = req.query.token;
+        jwt.verify(token, SEED, (err, decoded)=>{
+            if (err){
+                return res.status(401).json({
+                    ok:false,
+                    message:'token inválido',
+                    errors: err
+                });
+            }
+        });
+
+
+
+    });
+
 
     //acutalizar usuario (put)
     app.put('/:id', (req, res) => {
@@ -86,7 +107,7 @@ app.get('/', (req, res, next) => { //next: cuando se ejecute, continue a la prox
                         errors: err
                     });
                 }
-               
+
                 res.status(201).json({
                     ok: true,
                     usuario: usuarioGuardado //el nombre de la propiedad que quiero devolver
