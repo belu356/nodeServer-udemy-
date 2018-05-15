@@ -1,5 +1,6 @@
 var express = require('express');
 var app = express();
+ var bcrypt = require('bcrypt');
 
 var Usuario = require('../models/usuario');
 
@@ -30,7 +31,7 @@ app.post('/', (req, res) => {
     var usuario = new Usuario({//este usuario hace referencia  al modelo (../models/usuario)
         nombre: body.nombre,
         email: body.email,
-        password: body.password,
+        password: bcrypt.hashSync( body.password, 10),
         img: body.img,
         role: body.role
     });
