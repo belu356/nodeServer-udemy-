@@ -17,7 +17,7 @@ app.post('/', (req, res) => {
                 errors: err
             });
         }
-        //ver si esxiste este usario
+        //ver si existe este usario
 
         if (!usuarioDB) {
             return res.status(400).json({
@@ -37,25 +37,18 @@ app.post('/', (req, res) => {
         //crear token
         usuarioDB.password = ':)';
 
-        var token = jwt.sign({ usuario: usuarioDB }, SEED, { expiresIn: 14000 });
+        var token = jwt.sign({ usuario: usuarioDB }, SEED, { expiresIn: 144000 });
 
         res.status(200).json({
             ok: true,
             usuario: usuarioDB,
             token: token,
             id: usuarioDB._id
-        })
-
-
-        res.status(201).json({
-            ok: true,
-            message: 'Login funca',
-            body: body
         });
+
     })
-
-
 });
+
 
 
 
